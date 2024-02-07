@@ -17,7 +17,7 @@ scene.add(ambientLight);
 
 // Add a directional light to the scene
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(0, 1, 0); // Position the light from above
+directionalLight.position.set(0, 0, 0); // Position the light from above
 scene.add(directionalLight);
 
 // Load the GLTF model
