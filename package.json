@@ -1,0 +1,14 @@
+{
+  "name": "3d-portfolio",
+  "version": "1.0.0",
+  "description": "Computer Graphics Final Project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikola Domazetovikj <nikola.d@bridge-technology.net>",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.161.0"
+  }
+}
