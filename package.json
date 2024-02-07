@@ -9,6 +9,7 @@
   "author": "Nikola Domazetovikj <nikola.d@bridge-technology.net>",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.161.0"
+    "three": "^0.161.0",
+    "vite": "^5.0.12"
   }
 }
