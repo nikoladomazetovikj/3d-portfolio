@@ -19,9 +19,48 @@ function createSquare(x, y, imageUrl) {
     square.position.set(x, y, 0);
     scene.add(square);
 
-    // Create outline
-    const edges = new THREE.EdgesGeometry(geometry);
-    const outline = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00ffff }));
+    // Create outline geometry
+    const outlineGeometry = new THREE.BufferGeometry();
+    const vertices = [];
+    const halfSize = squareSize / 2;
+    vertices.push(-halfSize, halfSize, 0); // Top-left corner
+    vertices.push(halfSize, halfSize, 0); // Top-right corner
+    vertices.push(halfSize, -halfSize, 0); // Bottom-right corner
+    vertices.push(-halfSize, -halfSize, 0); // Bottom-left corner
+    vertices.push(-halfSize, halfSize, 0); // Closing the loop
+    outlineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+    // Create outline with custom shader for animated border
+    const outlineMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0.0 }
+        },
+        vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+        fragmentShader: `
+        uniform float time;
+        varying vec2 vUv;
+        void main() {
+            vec3 color = vec3(0.5, 0.7, 1.0); // Light blue color for border
+            float border = 5.0; // Border width (in pixels), increased for better visibility
+            float transition = sin(time * 2.0) * 0.5 + 0.5; // Animation transition
+            float alpha = 1.0 - smoothstep(0.5 - border, 0.5, abs(vUv.x - 0.5)); // Border alpha
+            alpha *= 1.0 - smoothstep(0.5 - border, 0.5, abs(vUv.y - 0.5)); // Additional alpha check for y-axis
+            gl_FragColor = vec4(color, alpha * transition);
+        }
+    `
+    });
+
+
+
+
+
+    const outline = new THREE.Line(outlineGeometry, outlineMaterial);
     outline.position.set(x, y, 0);
     scene.add(outline);
 
@@ -50,6 +89,9 @@ camera.position.set(0, 0, 500);
 
 function animate() {
     requestAnimationFrame(animate);
+    squares.forEach(({ outline }) => {
+        outline.material.uniforms.time.value += 0.10;
+    });
     renderer.render(scene, camera);
 }
 animate();
