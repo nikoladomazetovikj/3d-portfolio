@@ -10,7 +10,7 @@ const squares = [];
 
 function createSquare(x, y, imageUrl) {
     const squareSize = 100;
-    const borderSize = 3; // Adjust the border size as needed
+    const borderSize = 6; // Adjust the border size as needed
 
     // Create the border square
     const borderGeometry = new THREE.PlaneGeometry(squareSize + borderSize * 2, squareSize + borderSize * 2);
@@ -29,11 +29,15 @@ function createSquare(x, y, imageUrl) {
             uniform float time;
             varying vec2 vUv;
             void main() {
-                vec3 color = vec3(0.0, 0.0, 1.0); // Base color (blue)
+                vec3 color = vec3(0.5, 0.7, 1.0); // Light blue color
                 float frequency = 2.0; // Frequency of color change
                 float amplitude = 0.5; // Amplitude of color change
-                vec3 animatedColor = color * (sin(time * frequency) * amplitude + 1.0); // Animated color
-                gl_FragColor = vec4(animatedColor, 1.0);
+                float border = 0.05; // Border width
+                float transition = sin(time * 2.0) * 0.5 + 0.5; // Animation transition
+                float dist = distance(vUv, vec2(0.5)); // Distance from center
+                float alpha = 1.0 - smoothstep(0.5 - border, 0.5, dist); // Border alpha
+                vec3 animatedColor = color * (sin((vUv.x + vUv.y + time) * frequency) * amplitude + 1.0); // Animated color based on UV coordinates
+                gl_FragColor = vec4(animatedColor, alpha * transition);
             }
         `
     });
