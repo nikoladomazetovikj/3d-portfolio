@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -9,48 +8,20 @@ document.body.appendChild(renderer.domElement);
 
 const squares = [];
 
-function createSquare(x, y, svgUrl) {
+function createSquare(x, y, imageUrl) {
     const squareSize = 100;
 
     // Create the square
     const geometry = new THREE.PlaneGeometry(squareSize, squareSize);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color for SVG content
+    const texture = new THREE.TextureLoader().load(imageUrl);
+    const material = new THREE.MeshBasicMaterial({ map: texture });
     const square = new THREE.Mesh(geometry, material);
     square.position.set(x, y, 0);
     scene.add(square);
 
-    // Load SVG icon
-    const loader = new SVGLoader();
-    loader.load(
-        svgUrl,
-        function (data) {
-            const paths = data.paths;
-            const group = new THREE.Group();
-            group.scale.multiplyScalar(0.1);
-            group.position.set(x - squareSize / 2, y - squareSize / 2, 0.1); // Slightly higher than the square to avoid z-fighting
-            group.rotation.x = Math.PI;
-            group.rotation.z = Math.PI;
-            for (let i = 0; i < paths.length; i++) {
-                const path = paths[i];
-                const shapes = path.toShapes(true);
-                const geometry = new THREE.ShapeGeometry(shapes);
-                const material = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color for SVG content
-                const mesh = new THREE.Mesh(geometry, material);
-                group.add(mesh);
-            }
-            scene.add(group);
-        },
-        function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function (error) {
-            console.log('An error happened');
-        }
-    );
-
     // Create outline
     const edges = new THREE.EdgesGeometry(geometry);
-    const outline = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00ffff })); // Light blue color for outline
+    const outline = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00ffff }));
     outline.position.set(x, y, 0);
     scene.add(outline);
 
@@ -64,10 +35,10 @@ const spacingY = -200;
 let row = 0;
 let col = 0;
 
-document.querySelectorAll('.col-3').forEach((element) => {
+document.querySelectorAll('.row .col-3').forEach((element) => {
     const x = col * spacingX + offsetX;
     const y = row * spacingY + offsetY;
-    createSquare(x, y, `./assets/icons/${element.id}.svg`);
+    createSquare(x, y, `./assets/icons/${element.id}.png`);
     col++;
     if (col === 4) {
         col = 0;
