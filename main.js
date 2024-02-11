@@ -7,13 +7,14 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 5;
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
 document.body.appendChild(renderer.domElement);
 
 // Add OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
 controls.maxPolarAngle = Math.PI / 2;
@@ -42,7 +43,7 @@ scene.add(directionalLight);
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update(); // Update controls in each frame
+    controls.update();
     renderer.render(scene, camera);
 }
 
