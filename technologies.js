@@ -11,8 +11,10 @@ const squares = [];
 
 function createSquare(x, y, svgUrl) {
     const squareSize = 100;
+
+    // Create the square
     const geometry = new THREE.PlaneGeometry(squareSize, squareSize);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color for SVG content
     const square = new THREE.Mesh(geometry, material);
     square.position.set(x, y, 0);
     scene.add(square);
@@ -25,14 +27,14 @@ function createSquare(x, y, svgUrl) {
             const paths = data.paths;
             const group = new THREE.Group();
             group.scale.multiplyScalar(0.1);
-            group.position.set(x - squareSize / 2, y - squareSize / 2, 1);
+            group.position.set(x - squareSize / 2, y - squareSize / 2, 0.1); // Slightly higher than the square to avoid z-fighting
             group.rotation.x = Math.PI;
             group.rotation.z = Math.PI;
             for (let i = 0; i < paths.length; i++) {
                 const path = paths[i];
                 const shapes = path.toShapes(true);
                 const geometry = new THREE.ShapeGeometry(shapes);
-                const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+                const material = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color for SVG content
                 const mesh = new THREE.Mesh(geometry, material);
                 group.add(mesh);
             }
@@ -46,9 +48,14 @@ function createSquare(x, y, svgUrl) {
         }
     );
 
-    squares.push(square);
-}
+    // Create outline
+    const edges = new THREE.EdgesGeometry(geometry);
+    const outline = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00ffff })); // Light blue color for outline
+    outline.position.set(x, y, 0);
+    scene.add(outline);
 
+    squares.push({ square, outline });
+}
 
 const offsetX = -300;
 const offsetY = 150;
@@ -57,8 +64,7 @@ const spacingY = -200;
 let row = 0;
 let col = 0;
 
-
-document.querySelectorAll(' .col-3').forEach((element) => {
+document.querySelectorAll('.col-3').forEach((element) => {
     const x = col * spacingX + offsetX;
     const y = row * spacingY + offsetY;
     createSquare(x, y, `./assets/icons/${element.id}.svg`);
@@ -69,9 +75,7 @@ document.querySelectorAll(' .col-3').forEach((element) => {
     }
 });
 
-
 camera.position.set(0, 0, 500);
-
 
 function animate() {
     requestAnimationFrame(animate);
