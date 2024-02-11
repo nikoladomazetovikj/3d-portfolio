@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(20, 0, 5);
 camera.lookAt(0, 0, 0);
 
@@ -26,7 +26,6 @@ loader.load(
     function (gltf) {
         scene.add(gltf.scene);
     },
-    // Called while loading is progressing
     function (xhr) {
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
     },
