@@ -2,7 +2,7 @@
   "name": "3d-portfolio",
   "version": "1.0.0",
   "description": "Computer Graphics Final Project",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
