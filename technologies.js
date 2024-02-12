@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+
+document.getElementById('technologies').appendChild(renderer.domElement);
 
 const squares = [];
 
@@ -57,14 +58,14 @@ function createSquare(x, y, imageUrl) {
     squares.push({ square, borderSquare });
 }
 
-const offsetX = -300;
+const offsetX = -550;
 const offsetY = 150;
 const spacingX = 200;
 const spacingY = -200;
 let row = 0;
 let col = 0;
 
-document.querySelectorAll('.row .col-3').forEach((element) => {
+document.querySelectorAll('.ic').forEach((element) => {
     const x = col * spacingX + offsetX;
     const y = row * spacingY + offsetY;
     createSquare(x, y, `./assets/icons/${element.id}.png`);
